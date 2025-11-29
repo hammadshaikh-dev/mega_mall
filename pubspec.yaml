@@ -1,0 +1,30 @@
+name: mega_mall
+description: Mega Mall App - FULLY WORKING
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  provider: ^6.1.2
+  intl: ^0.18.1
+  cached_network_image: ^3.3.1
+  shimmer: ^3.0.0
+  badges: ^3.0.2   # Added for badge widget
+  lottie: ^3.3.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/animations/shopping_banner.json
+
+
+
