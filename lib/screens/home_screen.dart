@@ -1,26 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+
+import '../main.dart'; 
 import '../providers/cart_provider.dart';
 import '../utils/price_utils.dart';
 import '../models/product.dart';
 import 'cart_screen.dart';
 import 'product_detail_screen.dart';
-import '../widgets/animated_background.dart'; // ✅ import this
+import '../widgets/animated_background.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context); 
     final cart = Provider.of<CartProvider>(context);
     final List<Product> products = cart.products;
+
+    final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Mega Mall'),
-        backgroundColor: Colors.blueAccent,
+        // ✅ REMOVE these two lines:
+        // backgroundColor: theme.colorScheme.primary, 
+        // foregroundColor: theme.colorScheme.onPrimary,
         actions: [
+          IconButton(
+            icon: Icon(
+              themeProvider.isDark ? Icons.light_mode : Icons.dark_mode,
+            ),
+            onPressed: () {
+              themeProvider.toggleTheme();
+            },
+          ),
           Stack(
             alignment: Alignment.center,
             children: [
@@ -40,16 +55,19 @@ class HomeScreen extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.all(2),
                     decoration: BoxDecoration(
-                      color: Colors.red,
+                      color: theme.colorScheme.error,
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
+                    constraints: const BoxConstraints(
+                      minWidth: 16,
+                      minHeight: 16,
+                    ),
                     child: Text(
                       '${cart.items.length}',
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 10,
-                        color: Colors.white,
+                        color: theme.colorScheme.onError,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -59,14 +77,10 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-
-      // 🎨 HERE we wrap the ListView inside AnimatedBackground
       body: AnimatedBackground(
         child: ListView(
-          padding: const EdgeInsets.all(16),
           children: [
-            // 🟡 Animated Lottie Banner
-            ClipRRect(
+             ClipRRect(
               borderRadius: BorderRadius.circular(16),
               child: Lottie.asset(
                 'assets/animations/shopping_banner.json',
@@ -77,13 +91,12 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-
-            // 🛍️ Product Grid
             GridView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: products.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+
                 crossAxisCount: 2,
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12,
@@ -92,7 +105,6 @@ class HomeScreen extends StatelessWidget {
               itemBuilder: (ctx, i) {
                 final product = products[i];
                 final price = parsePrice(product.price);
-
                 return GestureDetector(
                   onTap: () {
                     Navigator.push(
@@ -104,6 +116,7 @@ class HomeScreen extends StatelessWidget {
                   },
                   child: Card(
                     elevation: 2,
+                    color: theme.cardColor,
                     child: Column(
                       children: [
                         Expanded(
@@ -124,14 +137,18 @@ class HomeScreen extends StatelessWidget {
                             children: [
                               Text(
                                 product.name,
-                                style: const TextStyle(fontWeight: FontWeight.bold),
+                                style: theme.textTheme.bodyLarge!
+                                    .copyWith(fontWeight: FontWeight.bold),
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                               ),
                               const SizedBox(height: 4),
                               Text(
                                 formatPricePKR(price),
-                                style: const TextStyle(color: Colors.green),
+                                style: TextStyle(
+                                  color: theme.colorScheme.secondary, 
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                               const SizedBox(height: 4),
                               SizedBox(
@@ -141,13 +158,12 @@ class HomeScreen extends StatelessWidget {
                                     cart.addItem(product);
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
-                                          content: Text('${product.name} added to cart!')),
+                                        content: Text(
+                                          '${product.name} added to cart!',
+                                        ),
+                                      ),
                                     );
                                   },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.blueAccent,
-                                    minimumSize: const Size(double.infinity, 36),
-                                  ),
                                   child: const Text('Add to Cart'),
                                 ),
                               ),

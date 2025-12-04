@@ -13,11 +13,13 @@ class ProductDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final cart = Provider.of<CartProvider>(context, listen: false);
     final price = parsePrice(product.price);
+    final theme = Theme.of(context); // Get the current theme data
 
     return Scaffold(
       appBar: AppBar(
         title: Text(product.name),
-        backgroundColor: Colors.blueAccent,
+        // ✅ Remove hardcoded color to use global theme settings:
+        // backgroundColor: Colors.blueAccent, 
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {
@@ -50,28 +52,40 @@ class ProductDetailScreen extends StatelessWidget {
                         children: [
                           Text(
                             product.name,
-                            style: const TextStyle(
-                                fontSize: 22, fontWeight: FontWeight.bold),
+                            style: TextStyle( // Changed from const
+                                fontSize: 22, 
+                                fontWeight: FontWeight.bold,
+                                // ✅ Use dynamic theme color
+                                color: theme.textTheme.bodyLarge!.color),
                           ),
                           const SizedBox(height: 8),
                           Text(
                             formatPricePKR(price),
-                            style: const TextStyle(
+                            style: TextStyle( // Changed from const
                                 fontSize: 20,
-                                color: Colors.green,
+                                // ✅ Use dynamic theme color (colorScheme.secondary works well)
+                                color: theme.colorScheme.secondary, 
                                 fontWeight: FontWeight.w600),
                           ),
                           const SizedBox(height: 16),
-                          const Text(
+                          Text(
                             "Product Description",
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
+                            style: TextStyle( // Changed from const
+                                fontSize: 18, 
+                                fontWeight: FontWeight.bold,
+                                // ✅ Use dynamic theme color
+                                color: theme.textTheme.bodyLarge!.color),
                           ),
                           const SizedBox(height: 8),
                           Text(
                             product.description,
-                            style: const TextStyle(
-                                fontSize: 16, color: Colors.black54),
+                            style: TextStyle( // Changed from const
+                                fontSize: 16, 
+                                // ❌ Old: color: Colors.black54, 
+                                // ✅ New: Use dynamic theme color with opacity
+                               // ✅ Replacement: Use withAlpha() or a standard color reference
+                                color: theme.textTheme.bodyMedium!.color?.withAlpha((255 * 0.7).toInt())),
+
                           ),
                         ],
                       ),
@@ -92,7 +106,8 @@ class ProductDetailScreen extends StatelessWidget {
                             );
                           },
                           style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.blueAccent),
+                            // ✅ Use primary color from theme
+                              backgroundColor: theme.colorScheme.primary), 
                           child: const Text(
                             'Add to Cart',
                             style: TextStyle(
