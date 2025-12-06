@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "824093111620",
+    "project_id": "mega-mall-cc23d",
+    "storage_bucket": "mega-mall-cc23d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:824093111620:android:fe9b6f2a93b689918e9311",
+        "android_client_info": {
+          "package_name": "com.example.mega_mall"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAHcKVhXxDrgn9TKlC2IkMHq05bFkOTKDU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
